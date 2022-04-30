@@ -1,17 +1,8 @@
 import math
 import socket
+import sympy
 
 # processo 2 calcula os numeros primos e os envia para o processo 3 calcular a chave 
-# função que localiza se o numero é primo
-def isPrime(n):
-    start = 2;
-
-    while start <= math.sqrt(n):
-        if n % start < 1:
-            return False;
-        start += 1;
-
-    return n > 1;
 
 # conexao com o processo 1
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -46,9 +37,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 
                     while (qtdvetor < n):
                         i = i-1
-                        primo = isPrime(i)
-                        if (primo == True):
+                              
+                        if sympy.isprime(i):
                             vet.append(i)
+                                                    
                         qtdvetor = len(vet)
                     
                     primoleft = qtdvetor - 1
@@ -60,8 +52,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 
                     while (qtdvetordir < n):
                         i = i+1
-                        primo = isPrime(i)
-                        if (primo == True):
+
+                        if sympy.isprime(i):
                             vetdir.append(i)
                         
                         qtdvetordir = len(vetdir)
@@ -86,7 +78,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     print ('\nChave gerada pelo processo 3: ')
                     print (chavegerada.decode())
                     
-                    resp_proc1 = 'Números encontrados no processo 2:' + '\n' + numencontrados + '\n\n' + 'Chave gerada pelo processo 3:' + '\n' + chavegerada.decode()
+                    resp_proc1 = 'Números encontrados no processo 2:' + '\n' + numencontrados + '\n\n' + 'Chave gerada pelo processo 3: ' + '\n' + chavegerada.decode()
                     message= "{0}".format(resp_proc1)
                     sen = message.encode()  
                     
